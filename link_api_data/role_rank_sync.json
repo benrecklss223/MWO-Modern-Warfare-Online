@@ -1,0 +1,8 @@
+{
+  "notes": "Map Discord role IDs to FTB Ranks names. Use nation-aligned roles here (no generic verified role).",
+  "role_to_rank": {
+    "123456789012345678": "nation_usa",
+    "234567890123456789": "nation_ger",
+    "345678901234567890": "nation_ussr"
+  }
+}
