@@ -1,5 +1,11 @@
 from flask import Flask, request, jsonify
-from link_manager import create_code, consume_code, get_link, unlink
+from link_manager import (
+    create_code,
+    consume_code,
+    get_link,
+    get_link_by_minecraft_name,
+    unlink,
+)
 
 app = Flask(__name__)
 
@@ -35,7 +41,7 @@ def consume():
     return consume_code(
         data.get("code"),
         data.get("discord_user_id"),
-        data.get("discord_tag")
+        data.get("discord_tag"),
     )
 
 
@@ -53,3 +59,19 @@ def delete(discord_id):
     if not removed:
         return {"ok": False}, 404
     return {"ok": True}
+
+
+@app.get("/minecraft/<minecraft_name>/status")
+def minecraft_status(minecraft_name):
+    discord_id, link = get_link_by_minecraft_name(minecraft_name)
+    if not link:
+        return {"ok": True, "linked": False, "minecraft_name": minecraft_name}
+
+    return {
+        "ok": True,
+        "linked": True,
+        "discord_user_id": discord_id,
+        "minecraft_name": link.get("minecraft_name", minecraft_name),
+        "minecraft_uuid": link.get("minecraft_uuid", ""),
+        "ftb_ranks": link.get("ftb_ranks", []),
+    }
